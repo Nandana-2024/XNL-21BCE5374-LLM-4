@@ -23,5 +23,5 @@ For Step-by-Step Process
 
 ## Documentation  
 
-For a detailed explanation of the project, refer to the [BAROZ_FINANCIAL_CHATBOT_21BCE5374.pdf](./BAROZ_FINANCIAL_CHATBOT_21BCE5374.pdf).  
+For a detailed explanation of the project, refer to the [BAROZ_FINANCIAL_CHATBOT_21BCE5374.pdf] 
 
