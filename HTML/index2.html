@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV to Graph</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        .title {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .graph-container {
+            margin-top: 20px;
+        }
+        #graph {
+            max-width: 100%;
+            max-height: 500px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            <h2>CSV to Graph: Credit Score vs Age</h2>
+        </div>
+        
+        <!-- Upload Form -->
+        <div>
+            <input type="file" id="fileInput" accept=".csv" />
+            <button onclick="uploadCSV()">Upload CSV</button>
+        </div>
+
+        <!-- Graph Container -->
+        <div class="graph-container">
+            <img id="graph" src="" alt="Graph will appear here" />
+        </div>
+    </div>
+
+    <script>
+        function uploadCSV() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert("Please select a CSV file!");
+                return;
+            }
+
+            // Create FormData to send the file to the server
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Make an API call to upload the file and generate the graph
+            fetch('/csv-to-graph', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.image) {
+                    const graphImage = document.getElementById('graph');
+                    // Convert the base64 string into a valid image source
+                    graphImage.src = 'data:image/png;base64,' + data.image;
+                } else {
+                    alert('Error generating graph: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error uploading file or generating graph');
+            });
+        }
+    </script>
+</body>
+</html>

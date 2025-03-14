@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baroz AI Assistant</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            text-align: center;
+        }
+        #chat-container {
+            width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px #ccc;
+        }
+        #messages {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        input, button {
+            margin-top: 10px;
+            padding: 8px;
+            width: 100%;
+        }
+        .user-message {
+            background-color: #DCF3F1;
+            padding: 8px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        .bot-message {
+            background-color: #f1f1f1;
+            padding: 8px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h2>Baroz AI Assistant</h2>
+    <div id="chat-container">
+        <div id="messages"></div>
+        <input type="text" id="userInput" placeholder="Ask me anything..." onkeypress="handleKeyPress(event)" />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+    <script>
+        function sendMessage() {
+            let inputField = document.getElementById("userInput");
+            let input = inputField.value.trim();
+            if (!input) return;
+
+            let messages = document.getElementById("messages");
+            messages.innerHTML += `<div class="user-message">You: ${input}</div>`;
+            
+            fetch("/ask", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ query: input })
+            })
+            .then(response => response.json())
+            .then(data => {
+                messages.innerHTML += `<div class="bot-message">Bot: ${data.answer}</div>`;
+                inputField.value = "";
+                messages.scrollTop = messages.scrollHeight; // Auto-scroll
+            });
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        }
+    </script>
+</body>
+</html>
+
+
